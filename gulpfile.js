@@ -1,8 +1,9 @@
 // Load plugins
 var gulp = require('gulp'),
-    sass = require('gulp-ruby-sass'),
     autoprefixer = require('gulp-autoprefixer'),
     cssnano = require('gulp-cssnano'),
+	cleancss = require('gulp-clean-css');
+	concatcss = require('gulp-concat-css')
     uglify = require('gulp-uglify'),
     imagemin = require('gulp-imagemin'),
     rename = require('gulp-rename'),
@@ -14,20 +15,15 @@ var gulp = require('gulp'),
 
 // Styles
 gulp.task('styles', function() {
-  return sass('src/css/main.scss', { style: 'expanded' })
-    .pipe(autoprefixer('last 2 version'))
-    .pipe(gulp.dest('dist/styles'))
-    .pipe(rename({ suffix: '.min' }))
-    .pipe(cssnano())
-    .pipe(gulp.dest('dist/styles'))
-    .pipe(notify({ message: 'Styles task complete' }));
+  return gulp.src('src/css/*.css')
+	.pipe(concatcss("main.css"))
+    .pipe(cleancss({compatibility: 'ie8'}))
+    .pipe(gulp.dest('dist/styles'));
 });
 
 // Scripts
 gulp.task('scripts', function() {
   return gulp.src('src/js/**/*.js')
-  
-   
     .pipe(concat('main.js'))
     .pipe(gulp.dest('dist/scripts'))
     .pipe(rename({ suffix: '.min' }))
